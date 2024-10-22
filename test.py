@@ -55,8 +55,9 @@ if st.button('연습 시작'):
         total_words = 0
         start_time = time.time()
 
-        # 연습 시작 루프
+        # 첫 단어 설정
         current_word = word_list.pop(0)
+
         while time.time() - start_time < practice_time:
             if not word_list:
                 word_list = words[:]
@@ -74,15 +75,17 @@ if st.button('연습 시작'):
                 st.markdown(f"<h4 style='color: #333;'>해석: <span style='color: #ff6347;'>{meaning}</span></h4>", unsafe_allow_html=True)
 
             # 사용자 입력 받기
-            user_input = st.text_input("단어를 입력하세요:", "", key=f"input_{total_words}")
+            user_input = st.text_input("단어를 입력하세요 (엔터를 누르세요):", "", key=f"input_{total_words}")
 
-            if user_input:
-                if user_input.strip() == current_word:
-                    correct_words += 1
-                    if not mute:
-                        st.success("정답입니다! 🎉")
+            if user_input.strip() == current_word:
+                correct_words += 1
+                if not mute:
+                    st.success("정답입니다! 🎉")
                 total_words += 1
-                current_word = word_list.pop(0) if word_list else ""
+                if word_list:
+                    current_word = word_list.pop(0)
+                else:
+                    break
                 st.experimental_rerun()
 
         # 연습 종료 후 결과 표시
@@ -100,4 +103,5 @@ st.markdown("""
         © 2024 타자 연습 프로그램 - 개발자와 함께하는 즐거운 학습
     </footer>
 """, unsafe_allow_html=True)
+
 
