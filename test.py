@@ -121,15 +121,11 @@ if 'remaining_time' not in st.session_state:
 # 연습 진행 중인지 확인
 if st.session_state.practice_active:
     # 실시간 남은 시간 표시
-    st.session_state.st.session_state.remaining_time = max(0, practice_time - (time.time() - st.session_state.start_time))
+    st.session_state.remaining_time = max(0, practice_time - (time.time() - st.session_state.start_time))
     progress = st.session_state.remaining_time / practice_time
     st.progress(progress)
     st.markdown(f"<div style='text-align: center;'>남은 시간: {int(st.session_state.remaining_time)}초</div>", unsafe_allow_html=True)
-        remaining_time = max(0, practice_time - (time.time() - st.session_state.start_time))
-        progress = remaining_time / practice_time
-        st.progress(progress)
-        st.markdown(f"<div style='text-align: center;'>남은 시간: {int(remaining_time)}초</div>", unsafe_allow_html=True)
-        time.sleep(1)
+        
     remaining_time = max(0, practice_time - (time.time() - st.session_state.start_time))
     progress = remaining_time / practice_time
     st.progress(progress)
