@@ -18,7 +18,7 @@ def load_word_file(file):
 st.set_page_config(page_title="타자 연습 프로그램", page_icon="🎓", layout="centered")
 
 # 앱 제목 및 설명
-st.title("타자 연습 프로그램")
+st.markdown("<h1 style='text-align: center;'>영지니 타자 연습</h1>", unsafe_allow_html=True)
 st.markdown("<h3 style='text-align: center; color: #4CAF50;'>단어 연습을 통해 타자 속도를 높이세요!</h3>", unsafe_allow_html=True)
 
 # 기본 폴더의 파일 선택 기능
@@ -108,15 +108,18 @@ def update_word():
     if user_input == current_word:
         st.session_state.correct_words += 1
         if not mute:
-            st.success("정답입니다! 🎉")
+        st.session_state.feedback_message = "정답입니다! 🎉"
     else:
-        st.error("오타입니다! 다음 단어로 넘어갑니다.")
+        st.session_state.feedback_message = "오타입니다! 다음 단어로 넘어갑니다."
     st.session_state.total_words += 1
     st.session_state.current_word_index += 1
     st.session_state.user_input = ""
 
 # 연습 진행 중인지 확인
 if st.session_state.practice_active:
+    # 남은 시간 표시
+    remaining_time = max(0, practice_time - (time.time() - st.session_state.start_time))
+    st.markdown(f"<h4 style='text-align: center; color: #ff4500;'>남은 시간: {int(remaining_time)}초</h4>", unsafe_allow_html=True)
     elapsed_time = time.time() - st.session_state.start_time
     if elapsed_time < practice_time:
         if st.session_state.current_word_index < len(st.session_state.word_list):
@@ -133,6 +136,9 @@ if st.session_state.practice_active:
 
             # 사용자 입력 받기
             user_input = st.text_input("단어를 입력하세요 (엔터를 누르세요):", key="input", value=st.session_state.user_input, on_change=update_word)
+            if 'feedback_message' in st.session_state and st.session_state.feedback_message:
+                st.write(st.session_state.feedback_message)
+                st.session_state.feedback_message = ""
 
             
     else:
