@@ -60,9 +60,6 @@ with stage_order_col2:
 with mute_col:
     mute = st.checkbox("음소거", value=False)
 
-# 시험 보기 버튼 추가
-test_button = st.button('시험 보기', key='test_button')
-
 # 연습 시간 설정 및 세션 상태 초기화
 practice_time = st.number_input("연습 시간 (초)", min_value=10, max_value=300, value=60)
 
@@ -80,7 +77,6 @@ if 'practice_active' not in st.session_state:
     st.session_state.practice_active = False
 if 'user_input' not in st.session_state:
     st.session_state.user_input = ""
-st.session_state["input"] = ""
 
 # 연습 시작 및 멈춤 버튼
 action_col1, action_col2 = st.columns(2)
@@ -105,108 +101,63 @@ with action_col2:
         st.session_state.practice_active = False
         st.info("연습이 중지되었습니다.")
 
+# 단어 업데이트 함수
 def update_word():
-    current_word = st.session_state.word_list[st.session_state.current_word_index]
-    user_input = st.session_state.user_input.strip()
-    if user_input == current_word:
-        st.session_state.correct_words += 1
-        if not mute:
-            st.session_state.feedback_message = "정답입니다! 🎉"
-    else:
-        st.session_state.feedback_message = "오타입니다! 다음 단어로 넘어갑니다."
-    st.session_state.total_words += 1
-    if st.session_state.user_input.strip() == st.session_state.word_list[st.session_state.current_word_index]:
-        st.session_state.correct_words += 1
-    st.session_state.user_input = ""
-    st.session_state.user_input = ""
-    st.session_state.current_word_index += 1
-    st.session_state.user_input = ""
+    if st.session_state.practice_active and st.session_state.current_word_index < len(st.session_state.word_list):
+        current_word = st.session_state.word_list[st.session_state.current_word_index]
+        user_input = st.session_state.user_input.strip()
+        st.session_state.total_words += 1
+        if user_input == current_word:
+            st.session_state.correct_words += 1
+            if not mute:
+                st.session_state.feedback_message = "정답입니다! 🎉"
+        else:
+            st.session_state.feedback_message = "오타입니다! 다음 단어로 넘어갑니다."
+        st.session_state.user_input = ""
+        st.session_state.current_word_index += 1
 
 if 'remaining_time' not in st.session_state:
     st.session_state.remaining_time = practice_time
 
 # 연습 진행 중인지 확인
-if test_button:
-    stage = "해석만 보기"
-    order = "랜덤하게"
-    st.session_state.word_list = words[:]
-    random.shuffle(st.session_state.word_list)
-    st.session_state.correct_words = 0
-    st.session_state.total_words = 0
-    st.session_state.start_time = time.time()
-    st.session_state.current_word_index = 0
-    st.session_state.practice_active = True
-    st.session_state.user_input = ""
-    st.session_state.word_list = words[:]
-    random.shuffle(st.session_state.word_list)
-    st.session_state.practice_active = True
-    st.session_state.start_time = time.time()
-    st.session_state.current_word_index = 0
-    st.session_state.practice_active = True
-    st.session_state.start_time = time.time()
-
 if st.session_state.practice_active:
     # 실시간 남은 시간 표시
     st.session_state.remaining_time = max(0, practice_time - (time.time() - st.session_state.start_time))
     progress = st.session_state.remaining_time / practice_time
     progress_bar = st.progress(progress)
     st.markdown(f"<div style='text-align: center;'>남은 시간: {int(st.session_state.remaining_time)}초</div>", unsafe_allow_html=True)
+
     if st.session_state.remaining_time == 0:
         st.session_state.practice_active = False
-    st.session_state.feedback_message = ""
-    # 연습 종료 후 결과 표시
-    elapsed_time = practice_time
-    speed = (st.session_state.correct_words / elapsed_time) * 60 if elapsed_time > 0 else 0
-    accuracy = (st.session_state.correct_words / st.session_state.total_words) * 100 if st.session_state.total_words > 0 else 0
-    st.info(f"✅ 연습 종료! 총 연습 시간: {elapsed_time:.2f}초")
-    st.markdown(f"**속도**: {speed:.2f} WPM (단어 분당)
-**정확도**: {accuracy:.2f}%")
-    st.session_state.feedback_message = ""
-    # 연습 종료 후 결과 표시
-    elapsed_time = practice_time
-    speed = (st.session_state.correct_words / elapsed_time) * 60 if elapsed_time > 0 else 0
-    accuracy = (st.session_state.correct_words / st.session_state.total_words) * 100 if st.session_state.total_words > 0 else 0
-    st.info(f"✅ 연습 종료! 총 연습 시간: {elapsed_time:.2f}초")
-    st.markdown(f"**속도**: {speed:.2f} WPM (단어 분당)
-**정확도**: {accuracy:.2f}%")
-        
-    
-    
+
+    if st.session_state.current_word_index < len(st.session_state.word_list):
+        current_word = st.session_state.word_list[st.session_state.current_word_index]
+        meaning = word_dict[current_word]
+
+        # 현재 단어와 해석 표시
+        if stage == "단어+해석":
+            st.markdown(f"<div style='text-align: center;'><h2 style='color: #4CAF50;'>{current_word}</h2><h4 style='color: #ff6347;'>{meaning}</h4></div>", unsafe_allow_html=True)
+        elif stage == "단어만 보기":
+            st.markdown(f"<div style='text-align: center;'><h2 style='color: #4CAF50;'>{current_word}</h2></div>", unsafe_allow_html=True)
+        elif stage == "해석만 보기":
+            st.markdown(f"<div style='text-align: center;'><h2 style='color: #ff6347;'>{meaning}</h2></div>", unsafe_allow_html=True)
+
+        # 사용자 입력 받기
+        user_input = st.text_input("단어를 입력하세요 (엔터를 누르세요):", key="input", value=st.session_state.user_input, on_change=update_word, label_visibility='collapsed')
+        st.markdown("<style>div.stTextInput>div>input { text-align: center; font-size: 2em; }</style>", unsafe_allow_html=True)
+
+    if 'feedback_message' in st.session_state and st.session_state.feedback_message:
+        st.write(st.session_state.feedback_message)
+        st.session_state.feedback_message = ""
+
+# 연습 종료 후 결과 표시
+if not st.session_state.practice_active and st.session_state.total_words > 0:
     elapsed_time = practice_time if st.session_state.remaining_time == 0 else (time.time() - st.session_state.start_time)
-    if elapsed_time < practice_time:
-        if st.session_state.current_word_index < len(st.session_state.word_list):
-            current_word = st.session_state.word_list[st.session_state.current_word_index]
-            meaning = word_dict[current_word]
+    speed = (st.session_state.correct_words / elapsed_time) * 60 if elapsed_time > 0 else 0
+    accuracy = (st.session_state.correct_words / st.session_state.total_words) * 100 if st.session_state.total_words > 0 else 0
 
-            # 현재 단어와 해석 표시
-            if stage == "단어+해석":
-                st.markdown(f"<div style='text-align: center;'><h2 style='color: #4CAF50;'>{current_word}</h2><h4 style='color: #ff6347;'>{meaning}</h4></div>", unsafe_allow_html=True)
-            elif stage == "단어만 보기":
-                st.markdown(f"<div style='text-align: center;'><h2 style='color: #4CAF50;'>{current_word}</h2></div>", unsafe_allow_html=True)
-            elif stage == "해석만 보기":
-                st.markdown(f"<div style='text-align: center;'><h2 style='color: #ff6347;'>{meaning}</h2></div>", unsafe_allow_html=True)
-
-            # 사용자 입력 받기
-            user_input = st.text_input("단어를 입력하세요 (엔터를 누르세요):", key="input", value=st.session_state.user_input, on_change=update_word, label_visibility='collapsed')
-            st.markdown("<style>div.stTextInput>div>input { text-align: center; font-size: 2em; }</style>", unsafe_allow_html=True)
-            st.markdown("<style>div.stTextInput>div>input { text-align: center; font-size: 1.5em; }</style>", unsafe_allow_html=True)
-            if st.session_state.remaining_time == 0:
-                update_word()
-            if 'feedback_message' in st.session_state and st.session_state.feedback_message:
-                st.write(st.session_state.feedback_message)
-                st.session_state.feedback_message = ""
-
-            
-    else:
-        # 연습 종료 후 결과 표시
-        st.session_state.practice_active = False
-        elapsed_time = practice_time
-        speed = (st.session_state.correct_words / elapsed_time) * 60 if elapsed_time > 0 else 0
-        accuracy = (st.session_state.correct_words / st.session_state.total_words) * 100 if st.session_state.total_words > 0 else 0
-
-        st.info(f"✅ 연습 종료! 총 연습 시간: {elapsed_time:.2f}초")
-        st.session_state.practice_active = False
-        st.markdown(f"**속도**: {speed:.2f} WPM (단어 분당)\n**정확도**: {accuracy:.2f}%")
+    st.info(f"✅ 연습 종료! 총 연습 시간: {elapsed_time:.2f}초")
+    st.markdown(f"**속도**: {speed:.2f} WPM (단어 분당)\n**정확도**: {accuracy:.2f}%")
 
 # 푸터 추가
 st.markdown("""
@@ -215,4 +166,5 @@ st.markdown("""
         © 2024 타자 연습 프로그램 - 영지니와 함께하는 즐거운 학습
     </footer>
 """, unsafe_allow_html=True)
+
 
