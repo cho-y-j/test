@@ -188,5 +188,4 @@ st.markdown("""
     <footer style='text-align: center; color: #888;'>
         © 2024 타자 연습 프로그램 - 영지니와 함께하는 즐거운 학습
     </footer>
-""", unsafe_allow_html
-
+""", unsafe_allow_html=True)
