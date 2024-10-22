@@ -52,6 +52,8 @@ if 'total_words' not in st.session_state:
     st.session_state.total_words = 0
 if 'start_time' not in st.session_state:
     st.session_state.start_time = 0
+if 'practice_active' not in st.session_state:
+    st.session_state.practice_active = False
 
 # 연습 시작 버튼
 if st.button('연습 시작'):
@@ -66,10 +68,10 @@ if st.button('연습 시작'):
         st.session_state.total_words = 0
         st.session_state.start_time = time.time()
         st.session_state.current_word_index = 0
-        st.experimental_rerun()
+        st.session_state.practice_active = True
 
 # 연습 진행 중인지 확인
-if st.session_state.start_time > 0:
+if st.session_state.practice_active:
     elapsed_time = time.time() - st.session_state.start_time
     if elapsed_time < practice_time:
         if st.session_state.current_word_index < len(st.session_state.word_list):
@@ -94,17 +96,19 @@ if st.session_state.start_time > 0:
                         st.success("정답입니다! 🎉")
                 st.session_state.total_words += 1
                 st.session_state.current_word_index += 1
-                st.experimental_rerun()
         else:
+            st.session_state.practice_active = False
             st.info("모든 단어를 완료했습니다. 연습을 종료합니다.")
     else:
         # 연습 종료 후 결과 표시
+        st.session_state.practice_active = False
         elapsed_time = time.time() - st.session_state.start_time
         speed = (st.session_state.correct_words / elapsed_time) * 60
         accuracy = (st.session_state.correct_words / st.session_state.total_words) * 100 if st.session_state.total_words else 0
 
         st.info(f"✅ 연습 종료! 총 연습 시간: {elapsed_time:.2f}초")
-        st.markdown(f"**속도**: {speed:.2f} WPM (단어 분당)\n**정확도**: {accuracy:.2f}%")
+        st.markdown(f"**속도**: {speed:.2f} WPM (단어 분당)
+**정확도**: {accuracy:.2f}%")
 
 # 푸터 추가
 st.markdown("""
@@ -113,4 +117,5 @@ st.markdown("""
         © 2024 타자 연습 프로그램 - 개발자와 함께하는 즐거운 학습
     </footer>
 """, unsafe_allow_html=True)
+
 
