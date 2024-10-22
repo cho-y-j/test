@@ -115,10 +115,16 @@ def update_word():
     st.session_state.current_word_index += 1
     st.session_state.user_input = ""
 
+if 'remaining_time' not in st.session_state:
+    st.session_state.remaining_time = practice_time
+
 # 연습 진행 중인지 확인
 if st.session_state.practice_active:
     # 실시간 남은 시간 표시
-    while remaining_time > 0:
+    st.session_state.st.session_state.remaining_time = max(0, practice_time - (time.time() - st.session_state.start_time))
+    progress = st.session_state.remaining_time / practice_time
+    st.progress(progress)
+    st.markdown(f"<div style='text-align: center;'>남은 시간: {int(st.session_state.remaining_time)}초</div>", unsafe_allow_html=True)
         remaining_time = max(0, practice_time - (time.time() - st.session_state.start_time))
         progress = remaining_time / practice_time
         st.progress(progress)
