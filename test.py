@@ -1,9 +1,8 @@
 import streamlit as st
 import time
 import random
-import streamlit.components.v1 as components
 
-# 단어 저장 및 연습 상태 관리 클래스
+# 단어 저장 및 연습 상태 관리 함수
 def load_word_file(file):
     word_dict = {}
     lines = file.read().decode("utf-8").splitlines()
@@ -14,44 +13,11 @@ def load_word_file(file):
         word_dict[word] = meaning
     return word_dict
 
-# Streamlit 앱 UI 생성 및 로직 구현
+# Streamlit 앱 설정
 st.set_page_config(page_title="타자 연습 프로그램", page_icon="🎓", layout="wide")
 
-# 스타일 커스터마이징
-st.markdown("""
-    <style>
-        .main {
-            background-color: #f0f2f6;
-        }
-        .stButton > button {
-            background-color: #4CAF50;
-            color: white;
-            border-radius: 12px;
-            font-size: 18px;
-            padding: 10px 20px;
-        }
-        .stButton > button:hover {
-            background-color: #45a049;
-        }
-        .stRadio > div {
-            background-color: #ffffff;
-            padding: 10px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-        .stNumberInput > div {
-            padding: 10px;
-            border-radius: 10px;
-        }
-        .stTextInput > div {
-            border-radius: 12px;
-            font-size: 16px;
-            padding: 5px;
-        }
-    </style>
-""", unsafe_allow_html=True)
-
-st.title("✨ 타자 연습 프로그램")
+# 앱 제목 및 설명
+st.title("타자 연습 프로그램")
 st.markdown("<h3 style='text-align: center; color: #4CAF50;'>단어 연습을 통해 타자 속도를 높이세요!</h3>", unsafe_allow_html=True)
 
 # 파일 업로드
@@ -75,7 +41,7 @@ order = st.radio("단어 순서 선택", order_options, index=0, horizontal=True
 practice_time = st.number_input("연습 시간 (초)", min_value=10, max_value=300, value=60)
 mute = st.checkbox("음소거", value=False)
 
-# 연습 시작
+# 연습 시작 버튼
 if st.button('연습 시작'):
     if not words:
         st.error("단어 파일이 없습니다. 단어 파일을 업로드해주세요.")
@@ -89,7 +55,7 @@ if st.button('연습 시작'):
         total_words = 0
         start_time = time.time()
 
-        # 연습 시간 카운트 시작
+        # 연습 시작 루프
         while time.time() - start_time < practice_time:
             if not word_list:
                 word_list = words[:]
@@ -132,3 +98,4 @@ st.markdown("""
         © 2024 타자 연습 프로그램 - 개발자와 함께하는 즐거운 학습
     </footer>
 """, unsafe_allow_html=True)
+
