@@ -1,0 +1,63 @@
+Numpy, 수치해석, 통계 관련 기능을 구현
+array(), 리스트 등을 Numpy 배열로 변환하는 함수
+np.zeros(), 모든 값이 0인 배열 생성
+np.ones(), 모든 값이 1인 배열 생성
+np.eye(), 단위 행렬(identity matrix) 생성
+np.arange(), 일정한 간격으로 값을 생성하는 함수
+np.linspace(), 시작점과 끝점을 지정하여 균일한 간격으로 값 생성
+np.reshape(), 배열의 형상을 바꾸는 함수
+np.transpose(), 배열의 차원을 전치하는 함수
+np.concatenate(), 두 배열을 연결하는 함수
+np.split(), 배열을 나누는 함수
+np.mean(), 배열의 평균 계산
+np.median(), 배열의 중앙값 계산
+np.std(), 배열의 표준 편차 계산
+np.sum(), 배열의 모든 요소의 합
+np.dot(), 두 배열의 내적 계산
+np.linalg.inv(), 행렬의 역행렬 계산
+np.linalg.det(), 행렬의 행렬식 계산
+np.random.rand(), 0과 1 사이의 난수를 가지는 배열 생성
+np.random.randn(), 표준 정규 분포를 따르는 난수 배열 생성
+np.save(), 배열을 파일로 저장
+np.load(), 파일에서 배열을 불러옴
+Matplotlib, 데이터 시각화 도구
+plt.plot(), 선 그래프 그리기
+plt.scatter(), 산점도 그리기
+plt.bar(), 막대 그래프 그리기
+plt.hist(), 히스토그램 그리기
+plt.pie(), 원형 차트 그리기
+plt.xlabel(), x축에 레이블 추가
+plt.ylabel(), y축에 레이블 추가
+plt.title(), 그래프에 제목 추가
+plt.legend(), 범례 추가
+plt.grid(), 그래프에 그리드 추가
+plt.show(), 그래프를 화면에 표시
+plt.savefig(), 그래프를 이미지 파일로 저장
+plt.xlim(), x축의 범위 설정
+plt.ylim(), y축의 범위 설정
+plt.subplot(), 여러 그래프를 하나의 플롯에 배치
+plt.clf(), 현재 그래프를 지움
+Pandas, 데이터 분석을 위한 도구
+pd.DataFrame(), 2차원 데이터를 담을 수 있는 데이터프레임 생성
+pd.Series(), 1차원 데이터를 담을 수 있는 시리즈 생성
+df.head(), 데이터프레임의 상위 n개 행 출력
+df.tail(), 데이터프레임의 하위 n개 행 출력
+df.info(), 데이터프레임의 요약 정보 출력
+df.describe(), 데이터프레임의 통계 요약 출력
+df.columns(), 데이터프레임의 열 이름 출력
+df.index(), 데이터프레임의 인덱스 출력
+df.shape(), 데이터프레임의 행과 열의 크기 출력
+df.dtypes(), 각 열의 데이터 타입 출력
+df.loc[], 라벨로 데이터 접근
+df.iloc[], 위치로 데이터 접근
+df.sort_values(), 특정 열을 기준으로 데이터 정렬
+df.drop(), 특정 행 또는 열을 삭제
+df.groupby(), 특정 기준으로 데이터 그룹화
+df.merge(), 두 데이터프레임을 병합
+df.concat(), 여러 데이터프레임을 연결
+df.fillna(), 결측값을 채움
+df.dropna(), 결측값을 포함한 행 또는 열 삭제
+df.pivot(), 데이터프레임의 피벗 테이블 생성
+df.apply(), 데이터프레임의 각 요소에 함수 적용
+df.to_csv(), 데이터를 CSV 파일로 저장
+df.read_csv(), CSV 파일에서 데이터를 읽어옴
