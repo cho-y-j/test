@@ -108,7 +108,7 @@ def update_word():
     if user_input == current_word:
         st.session_state.correct_words += 1
         if not mute:
-        st.session_state.feedback_message = "정답입니다! 🎉"
+            st.session_state.feedback_message = "정답입니다! 🎉"
     else:
         st.session_state.feedback_message = "오타입니다! 다음 단어로 넘어갑니다."
     st.session_state.total_words += 1
@@ -158,5 +158,6 @@ st.markdown("""
         © 2024 타자 연습 프로그램 - 개발자와 함께하는 즐거운 학습
     </footer>
 """, unsafe_allow_html=True)
+
 
 
