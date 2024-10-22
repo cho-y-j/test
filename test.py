@@ -1,6 +1,7 @@
 import streamlit as st
 import time
 import random
+import streamlit.components.v1 as components
 
 # 단어 저장 및 연습 상태 관리 클래스
 def load_word_file(file):
@@ -14,7 +15,44 @@ def load_word_file(file):
     return word_dict
 
 # Streamlit 앱 UI 생성 및 로직 구현
-st.title("타자 연습 프로그램")
+st.set_page_config(page_title="타자 연습 프로그램", page_icon="🎓", layout="wide")
+
+# 스타일 커스터마이징
+st.markdown("""
+    <style>
+        .main {
+            background-color: #f0f2f6;
+        }
+        .stButton > button {
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 12px;
+            font-size: 18px;
+            padding: 10px 20px;
+        }
+        .stButton > button:hover {
+            background-color: #45a049;
+        }
+        .stRadio > div {
+            background-color: #ffffff;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .stNumberInput > div {
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .stTextInput > div {
+            border-radius: 12px;
+            font-size: 16px;
+            padding: 5px;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+st.title("✨ 타자 연습 프로그램")
+st.markdown("<h3 style='text-align: center; color: #4CAF50;'>단어 연습을 통해 타자 속도를 높이세요!</h3>", unsafe_allow_html=True)
 
 # 파일 업로드
 uploaded_file = st.file_uploader("단어 파일 업로드 (텍스트 형식)", type="txt")
@@ -29,13 +67,13 @@ else:
 
 # 연습 단계 및 설정 선택
 stage_options = ["단어+해석", "단어만 보기", "해석만 보기"]
-stage = st.radio("연습 단계 선택", stage_options)
+stage = st.radio("연습 단계 선택", stage_options, index=0, horizontal=True)
 
 order_options = ["순차적으로", "랜덤하게"]
-order = st.radio("단어 순서 선택", order_options)
+order = st.radio("단어 순서 선택", order_options, index=0, horizontal=True)
 
 practice_time = st.number_input("연습 시간 (초)", min_value=10, max_value=300, value=60)
-mute = st.checkbox("음소거")
+mute = st.checkbox("음소거", value=False)
 
 # 연습 시작
 if st.button('연습 시작'):
@@ -63,20 +101,20 @@ if st.button('연습 시작'):
 
             # 현재 단어와 해석 표시
             if stage == "단어+해석":
-                st.write(f"단어: {current_word}, 해석: {meaning}")
+                st.markdown(f"<h4 style='color: #333;'>단어: <span style='color: #4CAF50;'>{current_word}</span>, 해석: <span style='color: #ff6347;'>{meaning}</span></h4>", unsafe_allow_html=True)
             elif stage == "단어만 보기":
-                st.write(f"단어: {current_word}")
+                st.markdown(f"<h4 style='color: #333;'>단어: <span style='color: #4CAF50;'>{current_word}</span></h4>", unsafe_allow_html=True)
             elif stage == "해석만 보기":
-                st.write(f"해석: {meaning}")
+                st.markdown(f"<h4 style='color: #333;'>해석: <span style='color: #ff6347;'>{meaning}</span></h4>", unsafe_allow_html=True)
 
             # 사용자 입력 받기
-            user_input = st.text_input("단어를 입력하세요:", "", key=f"input_{total_words}")
+            user_input = st.text_input("단어를 입력하세요:", "", key=f"input_{total_words}_{time.time()}")
 
             if user_input:
                 if user_input.strip() == current_word:
                     correct_words += 1
                     if not mute:
-                        st.balloons()  # 성공 시 시각적 피드백
+                        st.success("정답입니다! 🎉")
                 total_words += 1
 
         # 연습 종료 후 결과 표시
@@ -84,6 +122,13 @@ if st.button('연습 시작'):
         speed = (correct_words / elapsed_time) * 60
         accuracy = (correct_words / total_words) * 100 if total_words else 0
 
-        st.info(f"연습 종료! 총 연습 시간: {elapsed_time:.2f}초")
-        st.write(f"속도: {speed:.2f} WPM")
-        st.write(f"정확도: {accuracy:.2f}%")
+        st.info(f"✅ 연습 종료! 총 연습 시간: {elapsed_time:.2f}초")
+        st.markdown(f"**속도**: {speed:.2f} WPM (단어 분당)\n**정확도**: {accuracy:.2f}%")
+
+# 푸터 추가
+st.markdown("""
+    <hr style='border: 1px solid #ddd;'>
+    <footer style='text-align: center; color: #888;'>
+        © 2024 타자 연습 프로그램 - 개발자와 함께하는 즐거운 학습
+    </footer>
+""", unsafe_allow_html=True)
