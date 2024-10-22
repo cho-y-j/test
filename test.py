@@ -116,6 +116,7 @@ def update_word():
         st.session_state.feedback_message = "오타입니다! 다음 단어로 넘어갑니다."
     st.session_state.total_words += 1
     st.session_state.user_input = ""
+    st.session_state.user_input = ""
     st.session_state.current_word_index += 1
     st.session_state.user_input = ""
 
@@ -138,7 +139,7 @@ if st.session_state.practice_active:
         
     
     
-    elapsed_time = time.time() - st.session_state.start_time
+    elapsed_time = practice_time if st.session_state.remaining_time == 0 else (time.time() - st.session_state.start_time)
     if elapsed_time < practice_time:
         if st.session_state.current_word_index < len(st.session_state.word_list):
             current_word = st.session_state.word_list[st.session_state.current_word_index]
@@ -163,10 +164,11 @@ if st.session_state.practice_active:
         # 연습 종료 후 결과 표시
         st.session_state.practice_active = False
         elapsed_time = time.time() - st.session_state.start_time
-        speed = (st.session_state.correct_words / elapsed_time) * 60 if elapsed_time > 0 else 0
+        speed = (st.session_state.correct_words / practice_time) * 60 if practice_time > 0 else 0
         accuracy = (st.session_state.correct_words / st.session_state.total_words) * 100 if st.session_state.total_words > 0 else 0
 
         st.info(f"✅ 연습 종료! 총 연습 시간: {elapsed_time:.2f}초")
+        st.session_state.practice_active = False
         st.markdown(f"**속도**: {speed:.2f} WPM (단어 분당)\n**정확도**: {accuracy:.2f}%")
 
 # 푸터 추가
