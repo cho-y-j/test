@@ -68,6 +68,8 @@ if 'start_time' not in st.session_state:
     st.session_state.start_time = 0
 if 'practice_active' not in st.session_state:
     st.session_state.practice_active = False
+if 'user_input' not in st.session_state:
+    st.session_state.user_input = ""
 
 # 연습 시작 및 멈춤 버튼
 col1, col2 = st.columns(2)
@@ -85,6 +87,7 @@ with col1:
             st.session_state.start_time = time.time()
             st.session_state.current_word_index = 0
             st.session_state.practice_active = True
+            st.session_state.user_input = ""
 
 with col2:
     if st.button('연습 멈춤'):
@@ -108,19 +111,18 @@ if st.session_state.practice_active:
                 st.markdown(f"<h4 style='color: #333;'>해석: <span style='color: #ff6347;'>{meaning}</span></h4>", unsafe_allow_html=True)
 
             # 사용자 입력 받기
-            user_input = st.text_input("단어를 입력하세요 (엔터를 누르세요):", key=f"input_{st.session_state.current_word_index}")
+            user_input = st.text_input("단어를 입력하세요 (엔터를 누르세요):", value=st.session_state.user_input, key=f"input_{st.session_state.current_word_index}")
 
             if user_input:
                 if user_input.strip() == current_word:
                     st.session_state.correct_words += 1
                     if not mute:
                         st.success("정답입니다! 🎉")
+                    st.session_state.user_input = ""
+                else:
+                    st.session_state.user_input = user_input
                 st.session_state.total_words += 1
                 st.session_state.current_word_index += 1
-                st.experimental_rerun()
-        else:
-            st.session_state.practice_active = False
-            st.info("모든 단어를 완료했습니다. 연습을 종료합니다.")
     else:
         # 연습 종료 후 결과 표시
         st.session_state.practice_active = False
