@@ -61,7 +61,7 @@ with mute_col:
     mute = st.checkbox("음소거", value=False)
 
 # 시험 보기 버튼 추가
-test_button = st.button("<span style='font-size: 1.5em; color: #FF6347; font-weight: bold;'>시험 보기</span>", unsafe_allow_html=True)
+test_button = st.button('시험 보기')
 
 # 연습 시간 설정 및 세션 상태 초기화
 practice_time = st.number_input("연습 시간 (초)", min_value=10, max_value=300, value=60)
@@ -133,11 +133,9 @@ if st.session_state.practice_active:
     st.session_state.remaining_time = max(0, practice_time - (time.time() - st.session_state.start_time))
     progress = st.session_state.remaining_time / practice_time
     progress_bar = st.progress(progress)
-    progress_bar.progress(progress)
     st.markdown(f"<div style='text-align: center;'>남은 시간: {int(st.session_state.remaining_time)}초</div>", unsafe_allow_html=True)
         
-    remaining_time = max(0, practice_time - (time.time() - st.session_state.start_time))
-    progress = remaining_time / practice_time
+    
     
     elapsed_time = time.time() - st.session_state.start_time
     if elapsed_time < practice_time:
@@ -177,3 +175,4 @@ st.markdown("""
         © 2024 타자 연습 프로그램 - 영지니와 함께하는 즐거운 학습
     </footer>
 """, unsafe_allow_html=True)
+
