@@ -1,0 +1,67 @@
+variable, 변수
+x = 10, 변수 x에 10 할당
+name = "Alice", 변수 name에 문자열 Alice 할당
+PI = 3.14159, 상수 PI에 값 3.14159 할당
+operator, 연산자
+x + y, x와 y의 합
+x - y, x와 y의 차
+x * y, x와 y의 곱
+x / y, x를 y로 나눈 몫
+x % y, x를 y로 나눈 나머지
+x ** y, x의 y 제곱
+x // y, x를 y로 나눈 몫의 정수 부분
+condition, 조건문
+if x > y:, 만약 x가 y보다 크다면
+elif x == y:, 만약 x가 y와 같다면
+else:, 위 조건이 모두 거짓일 경우
+loop, 반복문
+for i in range(10):, i가 0부터 9까지 반복
+while x < 10:, x가 10보다 작을 때까지 반복
+loop control, 반복문의 제어
+break, 반복문을 즉시 종료
+continue, 현재 반복을 건너뛰고 다음 반복으로
+list, 리스트
+my_list = [1, 2, 3], 리스트 my_list에 1, 2, 3 할당
+my_list.append(4), 리스트 my_list에 4 추가
+my_list.remove(2), 리스트 my_list에서 2 제거
+my_list[0], 리스트 my_list의 첫 번째 요소 접근
+user-defined function, 사용자 정의 함수
+def my_function():, 사용자 정의 함수 my_function 정의
+return x, 함수에서 값을 반환
+time module, time 모듈
+time.time(), 현재 시간을 초 단위로 반환
+time.sleep(1), 1초 동안 일시 정지
+time.ctime(), 현재 시간을 사람이 읽을 수 있는 형식으로 반환
+time.strftime("%Y-%m-%d %H:%M:%S"), 지정된 형식으로 현재 시간을 문자열로 반환
+time.localtime(), 현재 시간을 구조체 형식으로 반환 (로컬 시간)
+time.gmtime(), UTC 시간 기준으로 현재 시간 반환
+time.perf_counter(), 프로그램의 성능 측정을 위한 고해상도 타이머 반환
+time.process_time(), 현재 프로세스에서 사용한 CPU 시간을 반환
+random module, random 모듈
+random.random(), 0.0과 1.0 사이의 난수 생성
+random.randint(1, 10), 1부터 10 사이의 임의의 정수 반환
+random.choice([1, 2, 3]), 리스트에서 임의의 요소 반환
+random.shuffle(my_list), 리스트의 요소들을 무작위로 섞음
+random.sample([1, 2, 3, 4, 5], 3, 리스트에서 임의의 요소 3개를 샘플로 반환
+random.uniform(1, 10), 1.0과 10.0 사이의 난수 생성
+random.gauss(0, 1), 평균이 0, 표준편차가 1인 정규분포에 따른 난수 생성
+random.seed(10), 난수 생성의 초기 시드를 10으로 설정
+turtle module, turtle 모듈
+turtle.forward(100), 터틀을 앞으로 100만큼 이동
+turtle.backward(50), 터틀을 뒤로 50만큼 이동
+turtle.right(90), 터틀을 오른쪽으로 90도 회전
+turtle.left(45), 터틀을 왼쪽으로 45도 회전
+turtle.penup(), 터틀이 선을 그리지 않도록 펜을 들기
+turtle.pendown(), 터틀이 선을 그리도록 펜을 내리기
+turtle.circle(50), 반지름 50의 원 그리기
+turtle.goto(0, 0), 터틀을 좌표 (0, 0)으로 이동
+turtle.speed(1), 터틀의 이동 속도를 1로 설정 (1이 가장 느림, 10이 가장 빠름)
+turtle.color("red"), 터틀의 펜 색상을 빨간색으로 설정
+turtle.bgcolor("blue"), 터틀 화면의 배경색을 파란색으로 설정
+turtle.shape("turtle"), 터틀 모양을 거북이로 설정
+turtle.hideturtle(), 터틀을 화면에서 숨기기
+turtle.showturtle(), 터틀을 화면에 다시 표시
+turtle.stamp(), 현재 터틀 모양을 화면에 찍기
+turtle.reset(), 터틀의 위치, 속도, 모양 등을 초기화
+turtle.clear(), 화면을 지우지만 터틀의 위치와 모양은 유지
+turtle.done(), 터틀 그래픽을 종료하고 창을 닫음
