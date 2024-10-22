@@ -119,7 +119,8 @@ def update_word():
 if st.session_state.practice_active:
     # 남은 시간 표시
     remaining_time = max(0, practice_time - (time.time() - st.session_state.start_time))
-    st.markdown(f"<h4 style='text-align: center; color: #ff4500;'>남은 시간: {int(remaining_time)}초</h4>", unsafe_allow_html=True)
+    progress = remaining_time / practice_time
+    st.progress(progress)
     elapsed_time = time.time() - st.session_state.start_time
     if elapsed_time < practice_time:
         if st.session_state.current_word_index < len(st.session_state.word_list):
@@ -158,6 +159,3 @@ st.markdown("""
         © 2024 타자 연습 프로그램 - 개발자와 함께하는 즐거운 학습
     </footer>
 """, unsafe_allow_html=True)
-
-
-
