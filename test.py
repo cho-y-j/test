@@ -118,21 +118,18 @@ if st.session_state.practice_active:
                 st.markdown(f"<div style='text-align: center;'><h2 style='color: #ff6347;'>{meaning}</h2></div>", unsafe_allow_html=True)
 
             # 사용자 입력 받기
-            user_input = st.text_input("단어를 입력하세요 (엔터를 누르세요):", value=st.session_state.user_input, key=f"input_{st.session_state.current_word_index}")
+            user_input = st.text_input("단어를 입력하세요 (엔터를 누르세요):", key=f"input_{st.session_state.current_word_index}")
 
-            if st.session_state.user_input != user_input:
-                st.session_state.user_input = user_input
-                if user_input.strip():
-                    if user_input.strip() == current_word:
-                        st.session_state.correct_words += 1
-                        if not mute:
-                            st.success("정답입니다! 🎉")
-                    else:
-                        st.error("오타입니다! 다음 단어로 넘어갑니다.")
-                    st.session_state.total_words += 1
-                    st.session_state.current_word_index += 1
-                    st.session_state.user_input = ""
-                    st.experimental_rerun()
+            if user_input:
+                if user_input.strip() == current_word:
+                    st.session_state.correct_words += 1
+                    if not mute:
+                        st.success("정답입니다! 🎉")
+                else:
+                    st.error("오타입니다! 다음 단어로 넘어갑니다.")
+                st.session_state.total_words += 1
+                st.session_state.current_word_index += 1
+                st.session_state.user_input = ""
     else:
         # 연습 종료 후 결과 표시
         st.session_state.practice_active = False
