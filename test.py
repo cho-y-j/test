@@ -15,7 +15,7 @@ def load_word_file(file):
     return word_dict
 
 # Streamlit 앱 설정
-st.set_page_config(page_title="타자 연습 프로그램", page_icon="🎓", layout="wide")
+st.set_page_config(page_title="타자 연습 프로그램", page_icon="🎓", layout="centered")
 
 # 앱 제목 및 설명
 st.title("타자 연습 프로그램")
@@ -27,10 +27,13 @@ if not os.path.exists(default_folder):
     os.makedirs(default_folder)
 
 files_in_folder = [f for f in os.listdir(default_folder) if os.path.isfile(os.path.join(default_folder, f)) and f.endswith(".txt")]
-selected_file = st.selectbox("기본 폴더에 있는 파일 선택 (선택 사항)", ["파일을 선택하세요"] + files_in_folder)
 
-# 파일 업로드
-uploaded_file = st.file_uploader("단어 파일 업로드 (텍스트 형식)", type="txt")
+# 파일 업로드 및 선택 UI 설정
+file_selection_col, upload_col = st.columns(2)
+with file_selection_col:
+    selected_file = st.selectbox("기본 폴더에 있는 파일 선택", ["파일을 선택하세요"] + files_in_folder)
+with upload_col:
+    uploaded_file = st.file_uploader("단어 파일 업로드 (텍스트 형식)", type="txt")
 
 if selected_file != "파일을 선택하세요":
     file_path = os.path.join(default_folder, selected_file)
@@ -47,15 +50,19 @@ else:
 
 # 연습 단계 및 설정 선택
 stage_options = ["단어+해석", "단어만 보기", "해석만 보기"]
-stage = st.radio("연습 단계 선택", stage_options, index=0, horizontal=True)
-
 order_options = ["순차적으로", "랜덤하게"]
-order = st.radio("단어 순서 선택", order_options, index=0, horizontal=True)
 
+stage_order_col1, stage_order_col2, mute_col = st.columns(3)
+with stage_order_col1:
+    stage = st.radio("연습 단계 선택", stage_options, index=0, horizontal=True)
+with stage_order_col2:
+    order = st.radio("단어 순서 선택", order_options, index=0, horizontal=True)
+with mute_col:
+    mute = st.checkbox("음소거", value=False)
+
+# 연습 시간 설정 및 세션 상태 초기화
 practice_time = st.number_input("연습 시간 (초)", min_value=10, max_value=300, value=60)
-mute = st.checkbox("음소거", value=False)
 
-# 고유 키 생성을 위한 세션 상태 초기화
 if 'current_word_index' not in st.session_state:
     st.session_state.current_word_index = 0
 if 'word_list' not in st.session_state:
@@ -72,8 +79,8 @@ if 'user_input' not in st.session_state:
     st.session_state.user_input = ""
 
 # 연습 시작 및 멈춤 버튼
-col1, col2 = st.columns(2)
-with col1:
+action_col1, action_col2 = st.columns(2)
+with action_col1:
     if st.button('연습 시작'):
         if not words:
             st.error("단어 파일이 없습니다. 단어 파일을 업로드하거나 기본 폴더에서 선택해주세요.")
@@ -89,7 +96,7 @@ with col1:
             st.session_state.practice_active = True
             st.session_state.user_input = ""
 
-with col2:
+with action_col2:
     if st.button('연습 멈춤'):
         st.session_state.practice_active = False
         st.info("연습이 중지되었습니다.")
@@ -104,11 +111,11 @@ if st.session_state.practice_active:
 
             # 현재 단어와 해석 표시
             if stage == "단어+해석":
-                st.markdown(f"<h4 style='color: #333;'>단어: <span style='color: #4CAF50;'>{current_word}</span>, 해석: <span style='color: #ff6347;'>{meaning}</span></h4>", unsafe_allow_html=True)
+                st.markdown(f"<div style='text-align: center;'><h2 style='color: #4CAF50;'>{current_word}</h2><h4 style='color: #ff6347;'>{meaning}</h4></div>", unsafe_allow_html=True)
             elif stage == "단어만 보기":
-                st.markdown(f"<h4 style='color: #333;'>단어: <span style='color: #4CAF50;'>{current_word}</span></h4>", unsafe_allow_html=True)
+                st.markdown(f"<div style='text-align: center;'><h2 style='color: #4CAF50;'>{current_word}</h2></div>", unsafe_allow_html=True)
             elif stage == "해석만 보기":
-                st.markdown(f"<h4 style='color: #333;'>해석: <span style='color: #ff6347;'>{meaning}</span></h4>", unsafe_allow_html=True)
+                st.markdown(f"<div style='text-align: center;'><h2 style='color: #ff6347;'>{meaning}</h2></div>", unsafe_allow_html=True)
 
             # 사용자 입력 받기
             user_input = st.text_input("단어를 입력하세요 (엔터를 누르세요):", value=st.session_state.user_input, key=f"input_{st.session_state.current_word_index}")
@@ -123,6 +130,7 @@ if st.session_state.practice_active:
                 st.session_state.total_words += 1
                 st.session_state.current_word_index += 1
                 st.session_state.user_input = ""
+                st.experimental_rerun()
     else:
         # 연습 종료 후 결과 표시
         st.session_state.practice_active = False
@@ -140,3 +148,4 @@ st.markdown("""
         © 2024 타자 연습 프로그램 - 개발자와 함께하는 즐거운 학습
     </footer>
 """, unsafe_allow_html=True)
+
