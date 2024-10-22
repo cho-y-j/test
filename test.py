@@ -152,7 +152,7 @@ if st.session_state.practice_active:
     progress_bar = st.progress(progress)
     st.markdown(f"<div style='text-align: center;'>남은 시간: {int(st.session_state.remaining_time)}초</div>", unsafe_allow_html=True)
     if st.session_state.remaining_time == 0:
-    st.session_state.practice_active = False
+        st.session_state.practice_active = False
     st.session_state.feedback_message = ""
     # 연습 종료 후 결과 표시
     elapsed_time = practice_time
