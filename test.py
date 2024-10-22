@@ -136,6 +136,8 @@ if st.session_state.practice_active:
     progress = st.session_state.remaining_time / practice_time
     progress_bar = st.progress(progress)
     st.markdown(f"<div style='text-align: center;'>남은 시간: {int(st.session_state.remaining_time)}초</div>", unsafe_allow_html=True)
+    if st.session_state.remaining_time == 0:
+        st.session_state.practice_active = False
         
     
     
@@ -155,6 +157,8 @@ if st.session_state.practice_active:
 
             # 사용자 입력 받기
             user_input = st.text_input("단어를 입력하세요 (엔터를 누르세요):", key="input", value=st.session_state.user_input, on_change=update_word)
+            if st.session_state.remaining_time == 0:
+                update_word()
             if 'feedback_message' in st.session_state and st.session_state.feedback_message:
                 st.write(st.session_state.feedback_message)
                 st.session_state.feedback_message = ""
@@ -163,8 +167,8 @@ if st.session_state.practice_active:
     else:
         # 연습 종료 후 결과 표시
         st.session_state.practice_active = False
-        elapsed_time = time.time() - st.session_state.start_time
-        speed = (st.session_state.correct_words / practice_time) * 60 if practice_time > 0 else 0
+        elapsed_time = practice_time
+        speed = (st.session_state.correct_words / elapsed_time) * 60 if elapsed_time > 0 else 0
         accuracy = (st.session_state.correct_words / st.session_state.total_words) * 100 if st.session_state.total_words > 0 else 0
 
         st.info(f"✅ 연습 종료! 총 연습 시간: {elapsed_time:.2f}초")
@@ -178,3 +182,4 @@ st.markdown("""
         © 2024 타자 연습 프로그램 - 영지니와 함께하는 즐거운 학습
     </footer>
 """, unsafe_allow_html=True)
+
