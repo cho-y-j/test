@@ -41,29 +41,39 @@ order = st.radio("단어 순서 선택", order_options, index=0, horizontal=True
 practice_time = st.number_input("연습 시간 (초)", min_value=10, max_value=300, value=60)
 mute = st.checkbox("음소거", value=False)
 
+# 고유 키 생성을 위한 세션 상태 초기화
+if 'current_word_index' not in st.session_state:
+    st.session_state.current_word_index = 0
+if 'word_list' not in st.session_state:
+    st.session_state.word_list = []
+if 'correct_words' not in st.session_state:
+    st.session_state.correct_words = 0
+if 'total_words' not in st.session_state:
+    st.session_state.total_words = 0
+if 'start_time' not in st.session_state:
+    st.session_state.start_time = 0
+
 # 연습 시작 버튼
 if st.button('연습 시작'):
     if not words:
         st.error("단어 파일이 없습니다. 단어 파일을 업로드해주세요.")
     else:
-        is_random = order == "랜덤하게"
-        word_list = words[:]
-        if is_random:
-            random.shuffle(word_list)
+        st.session_state.word_list = words[:]
+        if order == "랜덤하게":
+            random.shuffle(st.session_state.word_list)
 
-        correct_words = 0
-        total_words = 0
-        start_time = time.time()
+        st.session_state.correct_words = 0
+        st.session_state.total_words = 0
+        st.session_state.start_time = time.time()
+        st.session_state.current_word_index = 0
+        st.experimental_rerun()
 
-        # 첫 단어 설정
-        current_word = word_list.pop(0)
-
-        while time.time() - start_time < practice_time:
-            if not word_list:
-                word_list = words[:]
-                if is_random:
-                    random.shuffle(word_list)
-
+# 연습 진행 중인지 확인
+if st.session_state.start_time > 0:
+    elapsed_time = time.time() - st.session_state.start_time
+    if elapsed_time < practice_time:
+        if st.session_state.current_word_index < len(st.session_state.word_list):
+            current_word = st.session_state.word_list[st.session_state.current_word_index]
             meaning = word_dict[current_word]
 
             # 현재 단어와 해석 표시
@@ -75,23 +85,23 @@ if st.button('연습 시작'):
                 st.markdown(f"<h4 style='color: #333;'>해석: <span style='color: #ff6347;'>{meaning}</span></h4>", unsafe_allow_html=True)
 
             # 사용자 입력 받기
-            user_input = st.text_input("단어를 입력하세요 (엔터를 누르세요):", "", key=f"input_{total_words}")
+            user_input = st.text_input("단어를 입력하세요 (엔터를 누르세요):", key=f"input_{st.session_state.current_word_index}")
 
-            if user_input.strip() == current_word:
-                correct_words += 1
-                if not mute:
-                    st.success("정답입니다! 🎉")
-                total_words += 1
-                if word_list:
-                    current_word = word_list.pop(0)
-                else:
-                    break
+            if user_input:
+                if user_input.strip() == current_word:
+                    st.session_state.correct_words += 1
+                    if not mute:
+                        st.success("정답입니다! 🎉")
+                st.session_state.total_words += 1
+                st.session_state.current_word_index += 1
                 st.experimental_rerun()
-
+        else:
+            st.info("모든 단어를 완료했습니다. 연습을 종료합니다.")
+    else:
         # 연습 종료 후 결과 표시
-        elapsed_time = time.time() - start_time
-        speed = (correct_words / elapsed_time) * 60
-        accuracy = (correct_words / total_words) * 100 if total_words else 0
+        elapsed_time = time.time() - st.session_state.start_time
+        speed = (st.session_state.correct_words / elapsed_time) * 60
+        accuracy = (st.session_state.correct_words / st.session_state.total_words) * 100 if st.session_state.total_words else 0
 
         st.info(f"✅ 연습 종료! 총 연습 시간: {elapsed_time:.2f}초")
         st.markdown(f"**속도**: {speed:.2f} WPM (단어 분당)\n**정확도**: {accuracy:.2f}%")
@@ -103,5 +113,3 @@ st.markdown("""
         © 2024 타자 연습 프로그램 - 개발자와 함께하는 즐거운 학습
     </footer>
 """, unsafe_allow_html=True)
-
-
