@@ -77,6 +77,7 @@ if 'practice_active' not in st.session_state:
     st.session_state.practice_active = False
 if 'user_input' not in st.session_state:
     st.session_state.user_input = ""
+st.session_state["input"] = ""
 
 # 연습 시작 및 멈춤 버튼
 action_col1, action_col2 = st.columns(2)
@@ -131,7 +132,7 @@ if st.session_state.practice_active:
                 st.markdown(f"<div style='text-align: center;'><h2 style='color: #ff6347;'>{meaning}</h2></div>", unsafe_allow_html=True)
 
             # 사용자 입력 받기
-            user_input = st.text_input("단어를 입력하세요 (엔터를 누르세요):", key="input", on_change=update_word)
+            user_input = st.text_input("단어를 입력하세요 (엔터를 누르세요):", key="input", value=st.session_state.user_input, on_change=update_word)
 
             
     else:
@@ -151,4 +152,5 @@ st.markdown("""
         © 2024 타자 연습 프로그램 - 개발자와 함께하는 즐거운 학습
     </footer>
 """, unsafe_allow_html=True)
+
 
