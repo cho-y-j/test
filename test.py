@@ -26,7 +26,7 @@ default_folder = "./word_files"
 if not os.path.exists(default_folder):
     os.makedirs(default_folder)
 
-files_in_folder = [f for f in os.listdir(default_folder) if f.endswith(".txt")]
+files_in_folder = [f for f in os.listdir(default_folder) if os.path.isfile(os.path.join(default_folder, f)) and f.endswith(".txt")]
 selected_file = st.selectbox("기본 폴더에 있는 파일 선택 (선택 사항)", ["파일을 선택하세요"] + files_in_folder)
 
 # 파일 업로드
@@ -113,16 +113,16 @@ if st.session_state.practice_active:
             # 사용자 입력 받기
             user_input = st.text_input("단어를 입력하세요 (엔터를 누르세요):", value=st.session_state.user_input, key=f"input_{st.session_state.current_word_index}")
 
-            if user_input:
+            if user_input.strip():
                 if user_input.strip() == current_word:
                     st.session_state.correct_words += 1
                     if not mute:
                         st.success("정답입니다! 🎉")
-                    st.session_state.user_input = ""
                 else:
-                    st.session_state.user_input = user_input
+                    st.error("오타입니다! 다음 단어로 넘어갑니다.")
                 st.session_state.total_words += 1
                 st.session_state.current_word_index += 1
+                st.session_state.user_input = ""
     else:
         # 연습 종료 후 결과 표시
         st.session_state.practice_active = False
