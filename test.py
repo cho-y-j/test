@@ -60,6 +60,9 @@ with stage_order_col2:
 with mute_col:
     mute = st.checkbox("음소거", value=False)
 
+# 시험 보기 버튼 추가
+test_button = st.button('시험 보기', key='test_button')
+
 # 연습 시간 설정 및 세션 상태 초기화
 practice_time = st.number_input("연습 시간 (초)", min_value=10, max_value=300, value=60)
 
@@ -77,6 +80,25 @@ if 'practice_active' not in st.session_state:
     st.session_state.practice_active = False
 if 'user_input' not in st.session_state:
     st.session_state.user_input = ""
+if 'feedback_message' not in st.session_state:
+    st.session_state.feedback_message = ""
+
+# 시험 보기 버튼 동작
+def start_test():
+    st.session_state.word_list = words[:]
+    random.shuffle(st.session_state.word_list)
+    st.session_state.correct_words = 0
+    st.session_state.total_words = 0
+    st.session_state.start_time = time.time()
+    st.session_state.current_word_index = 0
+    st.session_state.practice_active = True
+    st.session_state.user_input = ""
+    st.session_state.feedback_message = ""
+
+if test_button:
+    stage = "해석만 보기"
+    order = "랜덤하게"
+    start_test()
 
 # 연습 시작 및 멈춤 버튼
 action_col1, action_col2 = st.columns(2)
@@ -95,6 +117,7 @@ with action_col1:
             st.session_state.current_word_index = 0
             st.session_state.practice_active = True
             st.session_state.user_input = ""
+            st.session_state.feedback_message = ""
 
 with action_col2:
     if st.button('연습 멈춤'):
@@ -166,5 +189,3 @@ st.markdown("""
         © 2024 타자 연습 프로그램 - 영지니와 함께하는 즐거운 학습
     </footer>
 """, unsafe_allow_html=True)
-
-
